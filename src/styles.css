@@ -1,0 +1,3 @@
+.correct-answer, .incorrect-answer, .next-question-btn, .select-answer{
+    display: none;
+}
