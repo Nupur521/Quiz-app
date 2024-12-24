@@ -8,7 +8,7 @@ import Error from "./components/Error.js";
 
 function App() {
 
-  const initialState={questions: [], status: 'loading', index:0}
+  const initialState={questions: [], status: 'loading', index:0, points:0}
 
   const reducer=(state, action)=>{
     switch (action.type){
@@ -19,7 +19,7 @@ function App() {
           return {...state, status: action.payload}
         
           case 'start':
-            return {...state, status: 'active'}
+            return {...state, status: 'active', index: 0, points: 0, secondsRemaining: 10}
           
           case 'selectedAnswer':
             return {...state, selectedAnswer: action.payload}
@@ -29,6 +29,12 @@ function App() {
           
             case 'nextQuestion':
               return {...state, index: state.index+1, selectedAnswer: ''}
+          
+          case 'points':
+               return {...state, points: state.points+action.payload}
+
+           case 'timer':
+                return {...state, secondsRemaining: state.secondsRemaining-1, status: state.secondsRemaining === 0 ? 'ready': state.status}
 
       }
     }
@@ -60,7 +66,12 @@ catch(error){
         {state.status === 'loading' && <Loader/>}
         {state.status === 'Error' && <Error/>}
         {state.status === 'ready' && <StartScreen questionsCount={questionsCount} dispatch={dispatch}/>}
-        {state.status === 'active' && <QuestionsList questions={state.questions[state.index]} dispatch={dispatch} selectedAnswer={state.selectedAnswer}/>}
+        {state.status === 'active' && <QuestionsList points={state.points} 
+        questions={state.questions[state.index]} 
+        dispatch={dispatch} 
+        selectedAnswer={state.selectedAnswer} 
+        questionIndex={state.index}
+        secondsRemaining={state.secondsRemaining}/>}
         </Main>
     </div>
   );
